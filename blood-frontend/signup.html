@@ -48,41 +48,44 @@
 
   <script>
     document.getElementById("signupForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+    e.preventDefault();
 
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const phone = document.getElementById("phone").value;
-      const bloodType = document.getElementById("bloodType").value;
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+    const bloodType = document.getElementById("bloodType").value;
 
-      const newUser = {
+    const newUser = {
         full_name: name,
         email,
         phone,
         blood_type: bloodType,
-        role: "user"
-      };
+        role: "user",
+        password: "default123" // You should implement proper password handling
+    };
 
-      try {
+    try {
         const response = await fetch("http://localhost:3000/users", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newUser),
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newUser),
         });
 
         if (response.ok) {
-          alert("Registration successful!");
-          window.location.href = "signin.html";
+            // Automatically log in the user after signup
+            localStorage.setItem('loggedInUser', JSON.stringify(newUser));
+            alert("Registration successful!");
+            window.location.href = "index.html";
         } else {
-          alert("Failed to register. Try again.");
+            alert("Failed to register. Try again.");
         }
-      } catch (err) {
+    } catch (err) {
         console.error("Error:", err);
         alert("An error occurred.");
-      }
-    });
+    }
+});
   </script>
 </body>
 </html>

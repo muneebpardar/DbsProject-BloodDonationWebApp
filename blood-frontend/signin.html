@@ -49,27 +49,28 @@
     }
 
     document.getElementById("signinForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+        e.preventDefault();
 
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-      try {
-        const response = await fetch("http://localhost:3000/users");
-        const users = await response.json();
+        try {
+            const response = await fetch("http://localhost:3000/users");
+            const users = await response.json();
 
-        const matchedUser = users.find(user => user.email === email && user.password === password);
+            const matchedUser = users.find(user => user.email === email && user.password === password);
 
-        if (matchedUser) {
-          // Optionally save user info in localStorage/sessionStorage
-          window.location.href = "index.html";
-        } else {
-          document.getElementById("errorMessage").classList.remove("hidden");
+            if (matchedUser) {
+                // Save user info in localStorage
+                localStorage.setItem('loggedInUser', JSON.stringify(matchedUser));
+                window.location.href = matchedUser.role === 'admin' ? 'admin.html' : 'index.html';
+            } else {
+                document.getElementById("errorMessage").classList.remove("hidden");
+            }
+        } catch (err) {
+            console.error("Error:", err);
+            alert("Something went wrong. Please try again.");
         }
-      } catch (err) {
-        console.error("Error:", err);
-        alert("Something went wrong. Please try again.");
-      }
     });
   </script>
 </body>
