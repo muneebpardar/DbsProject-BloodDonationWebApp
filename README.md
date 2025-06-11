@@ -1,4 +1,4 @@
-# 🩸 Blood Donation Management System
+# 🩸 Wat'een - Blood Donation Management System
 
 A full-stack web application connecting donors, recipients, and hospitals for efficient blood supply management.
 
@@ -21,6 +21,12 @@ A full-stack web application connecting donors, recipients, and hospitals for ef
 | Backend     | ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white) ![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white) |
 | Database    | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white) (Hosted on Neon) |
 | Auth        | ![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=JSON%2520web%2520tokens) |
+
+## 📜 License
+This project is licensed under the MIT License - see LICENSE for details.
+
+## 👨‍💻 Developer
+Muhammad Muneeb - mirmuneebpardar@gmail.com
 
 ## 🚀 Installation
 
@@ -45,8 +51,3 @@ node app.js
 Open the frontend
 Launch index.html in your browser.
 
-📜 License
-This project is licensed under the MIT License - see LICENSE for details.
-
-👨‍💻 Developer
-Muhammad Muneeb - mirmuneebpardar@gmail.com
