@@ -1,48 +1,52 @@
-# Blood Donation Web Application
+# 🩸 Blood Donation Management System
 
-Description
+A full-stack web application connecting donors, recipients, and hospitals for efficient blood supply management.
 
-A full-stack web application that connects blood donors, recipients, and hospitals. Users can sign up, request blood by type and area, register as donors, and hospitals can manage their blood inventory. Admins monitor all activity through a dashboard.
+## ✨ Features
 
-Features
+| Feature                | Description |
+|------------------------|-------------|
+| 🔐 Role-Based Access   | User, Donor & Admin dashboards with secure authentication (JWT) |
+| 🏥 Hospital & Blood Search | Filter hospitals by location and blood type availability |
+| 🩺 Blood Request System | Patients/hospitals can request specific blood types |
+| 📊 Real-Time Inventory | Admins track blood stock across hospitals via interactive charts |
+| 🔔 Smart Donor Matching | Auto-match donors based on blood type and proximity |
+| 📱 Responsive UI       | Mobile-friendly design with Tailwind CSS |
 
-Role-based login: user, donor, admin
+## 🛠 Tech Stack
 
-View hospitals & blood units
+| Layer       | Technology |
+|-------------|------------|
+| Frontend    | ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black) |
+| Backend     | ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white) ![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white) |
+| Database    | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white) (Hosted on Neon) |
+| Auth        | ![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=JSON%2520web%2520tokens) |
 
-Filter blood by group and location
+## 🚀 Installation
 
-Inventory modal view
+1. Clone the repository
+```bash
+git clone https://github.com/yourusername/blood-donation-app.git
+cd blood-donation-app
+Install dependencies
 
-Secure login/logout & session
-
-Admin dashboard for management
-
-Tech Stack
-
-Frontend: HTML, Tailwind CSS, JavaScript
-
-Backend: Node.js, Express
-
-Database: PostgreSQL (via Neon)
-
-Installation
-
-# Clone repo
-https://github.com/yourusername/blood-donation-app.git
-
-# Install dependencies
+bash
 npm install
+Set up environment variables
+Create a .env file:
 
-# Start backend
+env
+DB_URL=your_postgres_connection_string
+JWT_SECRET=your_jwt_secret_key
+Start the backend server
+
+bash
 node app.js
+Open the frontend
+Launch index.html in your browser.
 
-# Open index.html in browser
+📜 License
+This project is licensed under the MIT License - see LICENSE for details.
 
-License
-
-MIT License
-
-Developer
-
-[Your Full Name]📧 your.email@example.com
+👨‍💻 Developer
+Muhammad Muneeb - mirmuneebpardar@gmail.com
