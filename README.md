@@ -35,7 +35,7 @@ https://github.com/yourusername/blood-donation-app.git
 npm install
 
 # Start backend
-node index.js
+node app.js
 
 # Open index.html in browser
 
