@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodCare Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="scripts/header.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#EF4444',
+                            foreground: '#FEFEFE'
+                        },
+                        secondary: {
+                            DEFAULT: '#F1F5F9',
+                            foreground: '#1E293B'
+                        },
+                        muted: {
+                            DEFAULT: '#F1F5F9',
+                            foreground: '#64748B'
+                        },
+                        background: '#FFFFFF',
+                        foreground: '#0F172A',
+                        border: '#E2E8F0',
+                        input: '#E2E8F0',
+                        card: {
+                            DEFAULT: '#FFFFFF',
+                            foreground: '#0F172A'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-background">
+    <!-- Header -->
+    <header class="flex justify-between items-center p-4 shadow bg-white relative">
+        <div class="flex items-center gap-3">
+          <img src="styles/logo.png" alt="Logo" class="h-10 w-10" />
+          <span class="text-2xl font-bold text-red-600">
+            وَطِين <span class="text-sm text-gray-600">| Spreading Kindness</span>
+          </span>
+        </div>
+      
+        <nav id="navbar" class="flex-1 text-center"></nav>
+        <div id="user-info" class="flex items-center gap-4 relative"></div>
+      </header>
+
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-6 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-foreground mb-2">Admin Dashboard</h1>
+            
+            <!-- Tabs -->
+            <div class="border-b border-border">
+                <div class="flex space-x-8">
+                    <button onclick="showTab('add-hospital')" id="tab-add-hospital" class="tab-button pb-4 pt-2 border-b-2 border-primary text-primary">Add Hospital</button>
+                    <button onclick="showTab('update-inventory')" id="tab-update-inventory" class="tab-button pb-4 pt-2 border-b-2 border-transparent hover:border-primary">Update Inventory</button>
+                    <button onclick="showTab('requests')" id="tab-requests" class="tab-button pb-4 pt-2 border-b-2 border-transparent hover:border-primary">Requests</button>
+                    <button onclick="showTab('analytics')" id="tab-analytics" class="tab-button pb-4 pt-2 border-b-2 border-transparent hover:border-primary">Analytics</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <!-- Add Hospital Form -->
+                <div id="content-add-hospital" class="tab-content">
+                    <div class="bg-card rounded-lg border shadow-sm max-w-2xl">
+                        <div class="p-6 border-b">
+                            <h3 class="text-2xl font-semibold">Hospital Details</h3>
+                        </div>
+                        <div class="p-6">
+                            <form id="hospitalForm" class="space-y-6">
+                                <div>
+                                    <label for="hospital-name" class="block text-sm font-medium mb-1">Hospital Name*</label>
+                                    <input id="hospital-name" type="text" placeholder="Enter hospital name" required class="w-full h-10 px-3 py-2 border border-input rounded-md bg-background text-sm">
+                                </div>
+                                <div>
+                                    <label for="hospital-area" class="block text-sm font-medium mb-1">Area*</label>
+                                    <input id="hospital-area" type="text" placeholder="Enter area" required class="w-full h-10 px-3 py-2 border border-input rounded-md bg-background text-sm">
+                                </div>
+                                <div>
+                                    <label for="hospital-address" class="block text-sm font-medium mb-1">Address*</label>
+                                    <textarea id="hospital-address" placeholder="Enter full address" required class="w-full h-20 px-3 py-2 border border-input rounded-md bg-background text-sm"></textarea>
+                                </div>
+                                <button type="submit" class="bg-primary hover:bg-primary/90 text-primary-foreground h-10 px-4 py-2 rounded-md text-sm font-medium">
+                                    Add Hospital
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Inventory Form -->
+                <div id="content-update-inventory" class="tab-content hidden">
+                    <div class="bg-card rounded-lg border shadow-sm max-w-2xl">
+                        <div class="p-6 border-b">
+                            <h3 class="text-2xl font-semibold">Update Blood Inventory</h3>
+                        </div>
+                        <div class="p-6">
+                            <form id="inventoryForm" class="space-y-6">
+                                <div>
+                                    <label for="inventory-hospital" class="block text-sm font-medium mb-1">Hospital*</label>
+                                    <select id="inventory-hospital" required class="w-full h-10 px-3 py-2 border border-input rounded-md bg-background text-sm">
+                                        <option value="">Select hospital</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="inventory-blood-type" class="block text-sm font-medium mb-1">Blood Type*</label>
+                                    <select id="inventory-blood-type" required class="w-full h-10 px-3 py-2 border border-input rounded-md bg-background text-sm">
+                                        <option value="">Select blood type</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="inventory-quantity" class="block text-sm font-medium mb-1">Quantity*</label>
+                                    <input id="inventory-quantity" type="number" min="1" placeholder="Enter number of units" required class="w-full h-10 px-3 py-2 border border-input rounded-md bg-background text-sm">
+                                </div>
+                                <button type="submit" class="bg-primary hover:bg-primary/90 text-primary-foreground h-10 px-4 py-2 rounded-md text-sm font-medium">
+                                    Update Inventory
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blood Requests -->
+                <div id="content-requests" class="tab-content hidden">
+                    <div class="bg-card rounded-lg border shadow-sm">
+                        <div class="p-6 border-b">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-2xl font-semibold">Blood Requests</h3>
+                                <button onclick="fetchBloodRequests()" class="bg-secondary hover:bg-secondary/80 text-secondary-foreground h-8 px-3 py-1 rounded-md text-sm font-medium">
+                                    Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div id="requestsContainer" class="space-y-4">
+                                <div class="text-center text-muted-foreground py-8">
+                                    Loading blood requests...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics -->
+                <div id="content-analytics" class="tab-content hidden">
+                    <div class="bg-card rounded-lg border shadow-sm">
+                        <div class="p-6 border-b">
+                            <h3 class="text-2xl font-semibold">Blood Inventory Analytics</h3>
+                        </div>
+                        <div class="p-6 space-y-8">
+                            <!-- Charts Container -->
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <!-- Bar Chart -->
+                                <div class="space-y-4">
+                                    <h4 class="text-lg font-medium">Units by Blood Type</h4>
+                                    <div class="h-64">
+                                        <canvas id="bloodBarChart"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <!-- Pie Chart with Hospital Filter -->
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <h4 class="text-lg font-medium">Blood Type Distribution</h4>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-sm text-muted-foreground">Filter by:</span>
+                                            <select id="hospital-filter" class="h-8 px-3 py-1 border border-input rounded-md bg-background text-sm">
+                                                <option value="all">All Hospitals</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="h-64">
+                                        <canvas id="bloodPieChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Statistics Grid -->
+                            <div id="bloodStats" class="grid grid-cols-4 gap-4 text-center">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar - Blood Inventory Chart -->
+            <div class="lg:col-span-1">
+                <div class="bg-card rounded-lg border shadow-sm">
+                    <div class="p-6 border-b">
+                        <h3 class="text-2xl font-semibold">Quick Analytics</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="h-96 mb-4">
+                            <canvas id="sidebarChart"></canvas>
+                        </div>
+                        <div id="quickStats" class="grid grid-cols-4 gap-4 text-center">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-card border border-border rounded-lg shadow-lg p-4 transform translate-y-full transition-transform duration-300 z-50">
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <p id="toast-title" class="text-sm font-medium text-foreground">Success</p>
+                <p id="toast-message" class="text-sm text-muted-foreground">Action completed successfully!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let hospitals = [];
+        let bloodInventory = [];
+        let bloodRequests = [];
+        let users = [];
+        let currentUser = null;
+        let userNotifications = [];
+        let bloodBarChart, bloodPieChart, sidebarChart;
+
+        // Initialize empty data structure for all blood types
+        const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
+        
+        // Blood type colors
+        const bloodColors = {
+            'A+': '#EF4444',
+            'A-': '#F87171',
+            'B+': '#60A5FA',
+            'B-': '#93C5FD',
+            'O+': '#34D399',
+            'O-': '#6EE7B7',
+            'AB+': '#A78BFA',
+            'AB-': '#C7D2FE'
+        };
+
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:3000';
+        
+        // Header functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const navbar = document.getElementById('navbar');
+
+            const links = [
+                { name: 'Home', href: 'index.html' },
+                { name: 'Donate', href: 'donate.html' },
+                { name: 'Request', href: 'request.html' },
+                { name: 'Admin', href: 'admin.html' }
+            ];
+
+            navbar.innerHTML = `
+                <ul class="flex justify-center gap-10">
+                ${links.map(link => `
+                    <li>
+                    <a href="${link.href}" class="
+                        text-lg font-semibold text-gray-800 hover:text-red-600 
+                        transition-colors duration-200 relative
+                        after:content-[''] after:absolute after:bottom-0 after:left-0 
+                        after:w-0 after:h-0.5 after:bg-red-600 after:transition-all after:duration-300
+                        hover:after:w-full
+                    ">
+                        ${link.name}
+                    </a>
+                    </li>
+                `).join('')}
+                </ul>
+            `;
+
+            // Set up form submissions
+            document.getElementById('hospitalForm').addEventListener('submit', submitHospitalForm);
+            document.getElementById('inventoryForm').addEventListener('submit', submitInventoryForm);
+            document.getElementById('hospital-filter').addEventListener('change', updatePieChart);
+            
+            // Initialize the page
+            initializePage();
+            
+            // Check if user is already logged in (from localStorage)
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUserDisplay();
+                fetchUserNotifications();
+            }
+        });
+
+        // User authentication functions
+        async function loginUser() {
+            const email = document.getElementById('user-email').value;
+            if (!email) {
+                showToast('Error', 'Please enter your email', true);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/users`);
+                if (!response.ok) throw new Error('Failed to fetch users');
+                const users = await response.json();
+                
+                const user = users.find(u => u.email === email);
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    updateUserDisplay();
+                    fetchUserNotifications();
+                    showToast('Success', `Welcome back, ${user.full_name}!`);
+                } else {
+                    showToast('Error', 'User not found', true);
+                }
+            } catch (error) {
+                console.error('Error logging in:', error);
+                showToast('Error', 'Failed to login', true);
+            }
+        }
+
+        function logoutUser() {
+            currentUser = null;
+            userNotifications = [];
+            localStorage.removeItem('currentUser');
+            updateUserDisplay();
+            showToast('Success', 'Logged out successfully');
+        }
+
+        function updateUserDisplay() {
+            const loginForm = document.getElementById('login-form');
+            const userLoggedIn = document.getElementById('user-logged-in');
+            const userName = document.getElementById('user-name');
+
+            if (currentUser) {
+                loginForm.classList.add('hidden');
+                userLoggedIn.classList.remove('hidden');
+                userName.textContent = currentUser.full_name;
+            } else {
+                loginForm.classList.remove('hidden');
+                userLoggedIn.classList.add('hidden');
+                document.getElementById('user-email').value = '';
+            }
+        }
+
+        // Notification functions
+        async function fetchUserNotifications() {
+            if (!currentUser) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/notifications`);
+                if (!response.ok) throw new Error('Failed to fetch notifications');
+                const allNotifications = await response.json();
+                
+                userNotifications = allNotifications.filter(n => n.user_id === currentUser.id);
+                updateNotificationDisplay();
+            } catch (error) {
+                console.error('Error fetching notifications:', error);
+            }
+        }
+
+        function updateNotificationDisplay() {
+            const notificationCount = document.getElementById('notification-count');
+            const notificationsList = document.getElementById('notifications-list');
+
+            if (userNotifications.length > 0) {
+                notificationCount.classList.remove('hidden');
+                notificationCount.textContent = userNotifications.length;
+            } else {
+                notificationCount.classList.add('hidden');
+            }
+
+            if (userNotifications.length === 0) {
+                notificationsList.innerHTML = `
+                    <div class="p-4 text-center text-gray-500">
+                        No notifications
+                    </div>
+                `;
+            } else {
+                notificationsList.innerHTML = userNotifications.map(notification => `
+                    <div class="p-3 border-b border-gray-100 hover:bg-gray-50">
+                        <p class="text-sm text-gray-900">${notification.message}</p>
+                        <p class="text-xs text-gray-500 mt-1">${new Date(notification.created_at).toLocaleDateString()}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notifications-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close notifications dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('notifications-dropdown');
+            const button = event.target.closest('button[onclick="toggleNotifications()"]');
+            
+            if (!button && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active state from all tabs
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('border-primary', 'text-primary');
+                button.classList.add('border-transparent');
+            });
+            
+            // Show selected tab content
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            
+            // Add active state to selected tab
+            const activeTab = document.getElementById(`tab-${tabName}`);
+            activeTab.classList.add('border-primary', 'text-primary');
+            activeTab.classList.remove('border-transparent');
+
+            // If analytics tab is shown, refresh charts
+            if (tabName === 'analytics') {
+                setTimeout(() => {
+                    fetchBloodInventory();
+                }, 100);
+            }
+
+            // If requests tab is shown, fetch blood requests
+            if (tabName === 'requests') {
+                fetchBloodRequests();
+            }
+        }
+
+        // Toast notification
+        function showToast(title, message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMessage = document.getElementById('toast-message');
+            const toastIcon = toast.querySelector('svg');
+            
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            
+            if (isError) {
+                toastIcon.classList.remove('text-green-500');
+                toastIcon.classList.add('text-red-500');
+            } else {
+                toastIcon.classList.remove('text-red-500');
+                toastIcon.classList.add('text-green-500');
+            }
+            
+            toast.classList.remove('translate-y-full');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-full');
+            }, 3000);
+        }
+
+        // Initialize page
+        function initializePage() {
+            // Fetch initial data
+            fetchHospitals();
+            fetchBloodInventory();
+            fetchUsers();
+            
+            // Initialize empty charts
+            initializeEmptyCharts();
+        }
+
+        // Fetch users from API
+        async function fetchUsers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/users`);
+                if (!response.ok) throw new Error('Failed to fetch users');
+                users = await response.json();
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+
+        // Fetch blood requests from API
+        async function fetchBloodRequests() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/blood_requests`);
+                if (!response.ok) throw new Error('Failed to fetch blood requests');
+                bloodRequests = await response.json();
+                
+                displayBloodRequests();
+                showToast('Success', 'Blood requests loaded successfully');
+            } catch (error) {
+                console.error('Error fetching blood requests:', error);
+                showToast('Error', 'Failed to load blood requests', true);
+                document.getElementById('requestsContainer').innerHTML = `
+                    <div class="text-center text-red-500 py-8">
+                        Failed to load blood requests. Please try again.
+                    </div>
+                `;
+            }
+        }
+
+        // Display blood requests
+        function displayBloodRequests() {
+            const container = document.getElementById('requestsContainer');
+            
+            if (bloodRequests.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-muted-foreground py-8">
+                        No blood requests found.
+                    </div>
+                `;
+                return;
+            }
+
+            const requestsHTML = bloodRequests.map(request => {
+                const user = users.find(u => u.id === request.user_id);
+                const hospital = hospitals.find(h => h.id === request.hospital_id);
+                const userName = user ? user.full_name : 'Unknown User';
+                const hospitalName = hospital ? hospital.name : 'Unknown Hospital';
+                
+                // Check if there's enough inventory
+                const availableInventory = bloodInventory.find(inv => 
+                    inv.hospital_id === request.hospital_id && 
+                    inv.blood_type === request.blood_type
+                );
+                const availableUnits = availableInventory ? availableInventory.quantity : 0;
+                const canApprove = availableUnits >= request.units_required && request.status === 'pending';
+                
+                const statusColor = {
+                    'pending': 'bg-yellow-100 text-yellow-800',
+                    'approved': 'bg-green-100 text-green-800',
+                    'rejected': 'bg-red-100 text-red-800'
+                };
+
+                return `
+                    <div class="border border-border rounded-lg p-4 space-y-3">
+                        <div class="flex justify-between items-start">
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-semibold">Request #${request.id}</span>
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium ${statusColor[request.status] || statusColor.pending}">
+                                        ${request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                                    </span>
+                                </div>
+                                <div class="text-sm text-muted-foreground">
+                                    <div><strong>Patient:</strong> ${userName}</div>
+                                    <div><strong>Hospital:</strong> ${hospitalName}</div>
+                                    <div><strong>Blood Type:</strong> ${request.blood_type}</div>
+                                    <div><strong>Units Required:</strong> ${request.units_required}</div>
+                                    <div><strong>Available:</strong> ${availableUnits} units</div>
+                                    <div><strong>Requested:</strong> ${new Date(request.requested_at).toLocaleDateString()}</div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                ${request.status === 'pending' ? `
+                                    <button 
+                                        onclick="approveRequest(${request.id})"
+                                        ${!canApprove ? 'disabled' : ''}
+                                        class="px-3 py-1 rounded text-sm font-medium transition-colors ${
+                                            canApprove 
+                                                ? 'bg-green-600 hover:bg-green-700 text-white' 
+                                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        }"
+                                    >
+                                        ${canApprove ? 'Approve' : 'Insufficient Stock'}
+                                    </button>
+                                    <button 
+                                        onclick="rejectRequest(${request.id})"
+                                        class="px-3 py-1 rounded text-sm font-medium bg-red-600 hover:bg-red-700 text-white transition-colors"
+                                    >
+                                        Reject
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = requestsHTML;
+        }
+
+        // Approve blood request
+        async function approveRequest(requestId) {
+            try {
+                const request = bloodRequests.find(r => r.id === requestId);
+                if (!request) {
+                    showToast('Error', 'Request not found', true);
+                    return;
+                }
+
+                console.log('Processing request:', request);
+
+                // Find the exact inventory record for this hospital and blood type
+                const inventoryRecord = bloodInventory.find(inv => 
+                    inv.hospital_id == request.hospital_id && 
+                    inv.blood_type === request.blood_type
+                );
+                
+                console.log('Found inventory record:', inventoryRecord);
+                console.log('Request requires:', request.units_required, 'units');
+                console.log('Available:', inventoryRecord ? inventoryRecord.quantity : 0, 'units');
+
+                if (!inventoryRecord || inventoryRecord.quantity < request.units_required) {
+                    showToast('Error', 'Insufficient blood inventory available', true);
+                    return;
+                }
+
+                // Update request status to approved
+                const updateResponse = await fetch(`${API_BASE_URL}/blood_requests/${requestId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status: 'approved' })
+                });
+
+                if (!updateResponse.ok) {
+                    throw new Error('Failed to update request status');
+                }
+
+                console.log('Request status updated successfully');
+
+                // Calculate new inventory quantity
+                const newQuantity = inventoryRecord.quantity - request.units_required;
+                console.log('Updating inventory to new quantity:', newQuantity);
+
+                // Update inventory by reducing the quantity
+                const inventoryResponse = await fetch(`${API_BASE_URL}/blood_inventory/${inventoryRecord.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        hospital_id: inventoryRecord.hospital_id,
+                        blood_type: inventoryRecord.blood_type,
+                        quantity: newQuantity 
+                    })
+                });
+
+                if (!inventoryResponse.ok) {
+                    throw new Error('Failed to update inventory');
+                }
+
+                console.log('Inventory updated successfully');
+
+                // Send notification to user
+                const hospital = hospitals.find(h => h.id === request.hospital_id);
+                const notificationMessage = `Your blood request for ${request.units_required} units of ${request.blood_type} blood at ${hospital ? hospital.name : 'the hospital'} has been approved. Please contact the hospital for further instructions.`;
+                
+                const notificationResponse = await fetch(`${API_BASE_URL}/notifications`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: request.user_id,
+                        message: notificationMessage
+                    })
+                });
+
+                if (!notificationResponse.ok) {
+                    console.warn('Failed to send notification, but request was approved');
+                }
+
+                console.log('Notification sent successfully');
+
+                // Refresh data
+                await fetchBloodRequests();
+                await fetchBloodInventory();
+                
+                // Refresh user notifications if the current user is the one who made the request
+                if (currentUser && currentUser.id === request.user_id) {
+                    await fetchUserNotifications();
+                }
+                
+                showToast('Success', 'Blood request approved successfully!');
+            } catch (error) {
+                console.error('Error approving request:', error);
+                showToast('Error', 'Failed to approve request: ' + error.message, true);
+            }
+        }
+
+        // Reject blood request
+        async function rejectRequest(requestId) {
+            try {
+                const request = bloodRequests.find(r => r.id === requestId);
+                if (!request) {
+                    showToast('Error', 'Request not found', true);
+                    return;
+                }
+
+                // Update request status to rejected
+                const updateResponse = await fetch(`${API_BASE_URL}/blood_requests/${requestId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status: 'rejected' })
+                });
+
+                if (!updateResponse.ok) throw new Error('Failed to update request status');
+
+                // Send notification to user
+                const hospital = hospitals.find(h => h.id === request.hospital_id);
+                const notificationMessage = `Unfortunately, your blood request for ${request.units_required} units of ${request.blood_type} blood at ${hospital ? hospital.name : 'the hospital'} has been rejected. Please contact the hospital for more information.`;
+                
+                await fetch(`${API_BASE_URL}/notifications`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: request.user_id,
+                        message: notificationMessage
+                    })
+                });
+
+                // Refresh data
+                await fetchBloodRequests();
+                
+                // Refresh user notifications if the current user is the one who made the request
+                if (currentUser && currentUser.id === request.user_id) {
+                    await fetchUserNotifications();
+                }
+                
+                showToast('Success', 'Blood request rejected and user notified');
+            } catch (error) {
+                console.error('Error rejecting request:', error);
+                showToast('Error', 'Failed to reject request', true);
+            }
+        }
+
+        // Fetch hospitals from API
+        async function fetchHospitals() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/hospitals`);
+                if (!response.ok) throw new Error('Failed to fetch hospitals');
+                hospitals = await response.json();
+                
+                populateHospitalDropdown();
+                populateHospitalFilter();
+                showToast('Success', 'Hospitals loaded successfully');
+            } catch (error) {
+                console.error('Error fetching hospitals:', error);
+                showToast('Error', 'Failed to load hospitals', true);
+            }
+        }
+
+        // Fetch blood inventory from API
+        async function fetchBloodInventory() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/blood_inventory`);
+                if (!response.ok) throw new Error('Failed to fetch blood inventory');
+                bloodInventory = await response.json();
+                
+                // Convert quantity to numbers and filter out invalid entries
+                bloodInventory = bloodInventory.map(item => ({
+                    ...item,
+                    quantity: Number(item.quantity) || 0
+                })).filter(item => bloodTypes.includes(item.blood_type));
+                
+                updateCharts();
+                updateBloodStats();
+                showToast('Success', 'Blood inventory loaded successfully');
+            } catch (error) {
+                console.error('Error fetching blood inventory:', error);
+                showToast('Error', 'Failed to load blood inventory', true);
+            }
+        }
+
+        // Populate hospital dropdown
+        function populateHospitalDropdown() {
+            const dropdown = document.getElementById('inventory-hospital');
+            dropdown.innerHTML = '<option value="">Select hospital</option>';
+            
+            hospitals.forEach(hospital => {
+                const option = document.createElement('option');
+                option.value = hospital.id;
+                option.textContent = hospital.name;
+                dropdown.appendChild(option);
+            });
+        }
+
+        // Populate hospital filter dropdown
+        function populateHospitalFilter() {
+            const filter = document.getElementById('hospital-filter');
+            // Clear existing options except "All Hospitals"
+            filter.innerHTML = '<option value="all">All Hospitals</option>';
+            
+            hospitals.forEach(hospital => {
+                const option = document.createElement('option');
+                option.value = hospital.id;
+                option.textContent = hospital.name;
+                filter.appendChild(option);
+            });
+        }
+
+        // Update blood statistics
+        function updateBloodStats() {
+            const statsContainer = document.getElementById('bloodStats');
+            const quickStatsContainer = document.getElementById('quickStats');
+            statsContainer.innerHTML = '';
+            quickStatsContainer.innerHTML = '';
+            
+            // Initialize all blood types with 0
+            const bloodTypeStats = {};
+            bloodTypes.forEach(type => {
+                bloodTypeStats[type] = 0;
+            });
+            
+            // Sum quantities for each blood type
+            bloodInventory.forEach(item => {
+                if (bloodTypeStats.hasOwnProperty(item.blood_type)) {
+                    bloodTypeStats[item.blood_type] += item.quantity;
+                }
+            });
+            
+            // Create stat elements
+            bloodTypes.forEach(type => {
+                const count = bloodTypeStats[type];
+                
+                const statElement = `
+                    <div class="text-sm p-2 bg-gray-50 rounded-lg">
+                        <div class="font-semibold">${type}</div>
+                        <div class="text-muted-foreground">${count} units</div>
+                    </div>
+                `;
+                
+                statsContainer.innerHTML += statElement;
+                quickStatsContainer.innerHTML += statElement;
+            });
+        }
+
+        // Initialize empty charts
+        function initializeEmptyCharts() {
+            const emptyData = bloodTypes.map(type => ({
+                blood_type: type,
+                quantity: 0
+            }));
+            
+            if (!bloodBarChart) bloodBarChart = createBarChart('bloodBarChart', emptyData);
+            if (!bloodPieChart) bloodPieChart = createPieChart('bloodPieChart', emptyData);
+            if (!sidebarChart) sidebarChart = createBarChart('sidebarChart', emptyData);
+        }
+
+        // Create bar chart
+        function createBarChart(canvasId, data) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            // Group data by blood type
+            const bloodTypeStats = {};
+            bloodTypes.forEach(type => {
+                bloodTypeStats[type] = 0;
+            });
+            
+            data.forEach(item => {
+                if (bloodTypeStats.hasOwnProperty(item.blood_type)) {
+                    bloodTypeStats[item.blood_type] += item.quantity;
+                }
+            });
+            
+            const labels = Object.keys(bloodTypeStats);
+            const counts = Object.values(bloodTypeStats);
+            const bgColors = labels.map(type => bloodColors[type]);
+            
+            return new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Blood Units',
+                        data: counts,
+                        backgroundColor: bgColors,
+                        borderColor: bgColors.map(color => color.replace('0.8', '1')),
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.parsed.y} units`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#E2E8F0'
+                            },
+                            ticks: {
+                                precision: 0
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: '#E2E8F0'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Create pie chart
+        function createPieChart(canvasId, data) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            // Group data by blood type
+            const bloodTypeStats = {};
+            bloodTypes.forEach(type => {
+                bloodTypeStats[type] = 0;
+            });
+            
+            data.forEach(item => {
+                if (bloodTypeStats.hasOwnProperty(item.blood_type)) {
+                    bloodTypeStats[item.blood_type] += item.quantity;
+                }
+            });
+            
+            const labels = Object.keys(bloodTypeStats);
+            const counts = Object.values(bloodTypeStats);
+            const bgColors = labels.map(type => bloodColors[type]);
+            
+            return new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: bgColors,
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} units (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update all charts
+        function updateCharts() {
+            // Destroy existing charts if they exist
+            if (bloodBarChart) bloodBarChart.destroy();
+            if (bloodPieChart) bloodPieChart.destroy();
+            if (sidebarChart) sidebarChart.destroy();
+            
+            // Create new charts with current data
+            bloodBarChart = createBarChart('bloodBarChart', bloodInventory);
+            sidebarChart = createBarChart('sidebarChart', bloodInventory);
+            
+            // Update pie chart with current hospital filter
+            updatePieChart();
+        }
+
+        // Update pie chart based on hospital filter
+        function updatePieChart() {
+            const hospitalId = document.getElementById('hospital-filter').value;
+            let filteredData = [];
+            
+            if (hospitalId === 'all') {
+                // Use all data
+                filteredData = [...bloodInventory];
+            } else {
+                // Filter by hospital ID
+                filteredData = bloodInventory.filter(item => item.hospital_id == hospitalId);
+            }
+            
+            // Destroy existing pie chart
+            if (bloodPieChart) bloodPieChart.destroy();
+            
+            // Create new pie chart with filtered data
+            bloodPieChart = createPieChart('bloodPieChart', filteredData);
+        }
+
+        // Form submissions
+        async function submitHospitalForm(event) {
+            event.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('hospital-name').value,
+                area: document.getElementById('hospital-area').value,
+                address: document.getElementById('hospital-address').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/hospitals`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (!response.ok) throw new Error('Failed to add hospital');
+                
+                const newHospital = await response.json();
+                showToast('Success', 'Hospital added successfully!');
+                document.getElementById('hospitalForm').reset();
+                fetchHospitals(); // Refresh hospital list
+            } catch (error) {
+                console.error('Error adding hospital:', error);
+                showToast('Error', 'Failed to add hospital', true);
+            }
+        }
+
+        async function submitInventoryForm(event) {
+            event.preventDefault();
+            
+            const formData = {
+                hospital_id: parseInt(document.getElementById('inventory-hospital').value),
+                blood_type: document.getElementById('inventory-blood-type').value,
+                quantity: parseInt(document.getElementById('inventory-quantity').value)
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/blood_inventory`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (!response.ok) throw new Error('Failed to update inventory');
+                
+                showToast('Success', 'Inventory updated successfully!');
+                document.getElementById('inventoryForm').reset();
+                fetchBloodInventory(); // Refresh inventory data
+            } catch (error) {
+                console.error('Error updating inventory:', error);
+                showToast('Error', 'Failed to update inventory', true);
+            }
+        }
+    </script>
+</body>
+</html>

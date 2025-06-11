@@ -16,9 +16,13 @@
         <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
         <input type="email" id="email" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500" />
       </div>
+
       <div>
-        <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-        <input type="text" id="phone" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500" />
+        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <div class="relative">
+          <input type="password" id="password" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500 pr-10" />
+          <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-2 flex items-center text-sm text-gray-500">Show</button>
+        </div>
       </div>
 
       <button type="submit" class="w-full py-2 px-4 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700">Sign In</button>
@@ -32,20 +36,33 @@
   </div>
 
   <script>
+    function togglePassword() {
+      const passwordField = document.getElementById("password");
+      const button = passwordField.nextElementSibling;
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        button.textContent = "Hide";
+      } else {
+        passwordField.type = "password";
+        button.textContent = "Show";
+      }
+    }
+
     document.getElementById("signinForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const email = document.getElementById("email").value;
-      const phone = document.getElementById("phone").value;
+      const password = document.getElementById("password").value;
 
       try {
         const response = await fetch("http://localhost:3000/users");
         const users = await response.json();
 
-        const matchedUser = users.find(user => user.email === email && user.phone === phone);
+        const matchedUser = users.find(user => user.email === email && user.password === password);
 
         if (matchedUser) {
-          window.location.href = "index.html"; // ✅ Redirect on success
+          // Optionally save user info in localStorage/sessionStorage
+          window.location.href = "index.html";
         } else {
           document.getElementById("errorMessage").classList.remove("hidden");
         }

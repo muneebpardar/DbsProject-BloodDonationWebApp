@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وطين - Request Blood</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="scripts/header.js"></script>
+    <style>
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.error {
+            background: #ef4444;
+        }
+        
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="flex justify-between items-center p-4 shadow bg-white relative">
+        <div class="flex items-center gap-3">
+          <img src="styles/logo.png" alt="Logo" class="h-10 w-10" />
+          <span class="text-2xl font-bold text-red-600">
+            وَطِين <span class="text-sm text-gray-600">| Spreading Kindness</span>
+          </span>
+        </div>
+      
+        <nav id="navbar" class="flex-1 text-center"></nav>
+        <div id="user-info" class="flex items-center gap-4 relative"></div>
+      </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Request Blood - Save Lives</h1>
+            <p class="text-lg text-gray-600">Submit a blood request to find matching donors in your area.</p>
+        </div>
+
+        <!-- Blood Request Form -->
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg border">
+                <div class="bg-red-50 border-b px-6 py-4">
+                    <h2 class="text-2xl font-semibold text-red-700">Blood Request Form</h2>
+                    <p class="text-gray-600 mt-1">Fill out this form to request blood for a patient in need</p>
+                </div>
+                
+                <div class="p-6">
+                    <form id="bloodRequestForm" class="space-y-6">
+                        <!-- Personal Information -->
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-900 border-b pb-2">Personal Information</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <label for="full_name" class="text-sm font-medium text-gray-700">
+                                        Full Name *
+                                    </label>
+                                    <input
+                                        id="full_name"
+                                        name="full_name"
+                                        type="text"
+                                        placeholder="Enter your full name"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                        required
+                                    />
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label for="email" class="text-sm font-medium text-gray-700">
+                                        Email Address *
+                                    </label>
+                                    <input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        placeholder="Enter your email address"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="phone" class="text-sm font-medium text-gray-700">
+                                    Phone Number *
+                                </label>
+                                <input
+                                    id="phone"
+                                    name="phone"
+                                    type="tel"
+                                    placeholder="Enter your phone number"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Blood Request Details -->
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-900 border-b pb-2">Blood Request Details</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <label for="blood_type" class="text-sm font-medium text-gray-700">
+                                        Blood Type Required *
+                                    </label>
+                                    <select
+                                        id="blood_type"
+                                        name="blood_type"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                        required
+                                    >
+                                        <option value="">Select blood type</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label for="units_required" class="text-sm font-medium text-gray-700">
+                                        Units Required *
+                                    </label>
+                                    <input
+                                        id="units_required"
+                                        name="units_required"
+                                        type="number"
+                                        min="1"
+                                        max="10"
+                                        placeholder="Number of units"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="hospital_id" class="text-sm font-medium text-gray-700">
+                                    Preferred Hospital *
+                                </label>
+                                <select
+                                    id="hospital_id"
+                                    name="hospital_id"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    required
+                                >
+                                    <option value="">Loading hospitals...</option>
+                                </select>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="urgency" class="text-sm font-medium text-gray-700">
+                                    Urgency Level
+                                </label>
+                                <select
+                                    id="urgency"
+                                    name="urgency"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                >
+                                    <option value="low">Low Priority</option>
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="high">High Priority</option>
+                                    <option value="emergency">Emergency</option>
+                                </select>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="patient_condition" class="text-sm font-medium text-gray-700">
+                                    Patient Condition (Optional)
+                                </label>
+                                <input
+                                    id="patient_condition"
+                                    name="patient_condition"
+                                    type="text"
+                                    placeholder="Brief description of patient condition"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <button 
+                                type="submit" 
+                                id="submitBtn"
+                                class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 text-lg rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                            >
+                                Submit Blood Request
+                            </button>
+                        </div>
+
+                        <div class="text-sm text-gray-600 text-center">
+                            <p>* Required fields</p>
+                            <p class="mt-1">Your request will be shared with matching donors in your area.</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type === 'error' ? 'error' : ''}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 3000);
+        }
+
+        // Load hospitals on page load
+        async function loadHospitals() {
+            const hospitalSelect = document.getElementById('hospital_id');
+            
+            try {
+                console.log('Fetching hospitals from API...');
+                const response = await fetch('http://localhost:3000/hospitals');
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch hospitals');
+                }
+                
+                const hospitals = await response.json();
+                console.log('Hospitals loaded:', hospitals);
+                
+                // Clear loading option
+                hospitalSelect.innerHTML = '<option value="">Select hospital</option>';
+                
+                // Add hospitals to dropdown
+                hospitals.forEach(hospital => {
+                    const option = document.createElement('option');
+                    option.value = hospital.id;
+                    option.textContent = `${hospital.name} - ${hospital.area}`;
+                    hospitalSelect.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Error loading hospitals:', error);
+                hospitalSelect.innerHTML = '<option value="">Error loading hospitals. Please refresh the page.</option>';
+                showToast('Failed to load hospitals. Please refresh the page.', 'error');
+            }
+        }
+
+        // Form submission handler
+        document.getElementById('bloodRequestForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const form = e.target;
+            
+            // Get form data
+            const formData = new FormData(form);
+            const data = {
+                user_id: 1, // This would come from authentication in a real app
+                blood_type: formData.get('blood_type'),
+                hospital_id: parseInt(formData.get('hospital_id')),
+                units_required: parseInt(formData.get('units_required')),
+                status: 'pending'
+            };
+
+            // Validate required fields
+            if (!formData.get('full_name') || !formData.get('email') || !formData.get('phone') || 
+                !formData.get('blood_type') || !formData.get('hospital_id') || !formData.get('units_required')) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            // Show loading state
+            submitBtn.textContent = 'Submitting Request...';
+            submitBtn.disabled = true;
+            form.classList.add('loading');
+
+            try {
+                console.log('Submitting blood request:', data);
+
+                const response = await fetch('http://localhost:3000/blood_requests', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit blood request');
+                }
+
+                const result = await response.json();
+                console.log('Blood request submitted successfully:', result);
+                
+                showToast('Blood request submitted successfully! We will notify matching donors in your area.');
+                
+                // Reset form
+                form.reset();
+                // Reload hospitals after form reset
+                loadHospitals();
+
+            } catch (error) {
+                console.error('Error submitting blood request:', error);
+                showToast('Failed to submit blood request. Please try again.', 'error');
+            } finally {
+                // Reset button state
+                submitBtn.textContent = 'Submit Blood Request';
+                submitBtn.disabled = false;
+                form.classList.remove('loading');
+            }
+        });
+
+        // Load hospitals when page loads
+        document.addEventListener('DOMContentLoaded', loadHospitals);
+    </script>
+</body>
+</html>
